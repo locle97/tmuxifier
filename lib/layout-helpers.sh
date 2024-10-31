@@ -272,6 +272,55 @@ load_session() {
   fi
 }
 
+save_session() {
+    if [[ -z "$TMUX" ]]; then
+        echo "Tmux is not running yet"
+        return 0
+    fi
+
+    local file
+    if [ "${1#*/}" = "$1" ]; then
+        # There's no slash in the path.
+        if [ -f "$TMUXIFIER_LAYOUT_PATH/$1.session.sh" ] || [ ! -f "$1" ]; then
+            file="$TMUXIFIER_LAYOUT_PATH/$1.session.sh"
+        else
+            # bash's 'source' requires an slash in the filename to not use $PATH.
+            file="./$1"
+        fi
+    else
+        file="$1"
+    fi
+
+    if ! [ -f "$file" ]; then
+        # Saving new session
+        echo "Saving new \"$1\" session." >&2
+
+        selected_window=0
+        # Iterate through each window
+        while read -r line; do
+            # Extract the window index and full name with status
+            window_id=$(echo "$line" | awk -F':' '{print $1}')
+            full_name=$(echo "$line" | awk -F' ' '{print $2}')
+            
+            # Get the last character of the name as status
+            status="${full_name: -1}"
+            window_name="${full_name::-1}"  # Remove the last character '*'
+
+            if [ "$status" == "*" ]; then
+                selected_window="$window_id"
+            fi
+            
+            # Additional actions for each window can go here
+        done < <(tmux list-windows)
+
+        return 1
+    else
+        # Saving to existing session
+        echo "Session \"$1\" cannot be saved due to existence." >&2
+        return 1
+    fi
+}
+
 # Create a new session, returning 0 on success, 1 on failure.
 #
 # Arguments:
