@@ -9,12 +9,6 @@ if initialize_session "{{SESSION_NAME}}"; then
   # Create a new window inline within session layout definition.
   new_window "Editor"
   new_window "Fish"
-  # Split window into panes.
-    split_v 50
-    run_cmd "htop"
-
-  # Load a defined window layout.
-  #load_window "example"
 
   # Select the default active window on session creation.
   select_window 0
