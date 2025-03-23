@@ -55,7 +55,7 @@ Which will yield a Tmux window looking like this:
 
 Clone the repo to your machine:
 
-    git clone https://github.com/jimeh/tmuxifier.git ~/.tmuxifier
+    git clone https://github.com/locle97/tmuxifier.git ~/.tmuxifier
 
 Then add `$HOME/.tmuxifier/bin` to your PATH to make the `tmuxifier` executable
 available to you:
